@@ -3,16 +3,16 @@ package LiqueurDepartment.model;
 public class Liqueur {
     private int liqueurId;
     private String liqueurName;
-    private String type; // 주류 종류 (예: 위스키, 와인, 보드카 등)
-    private double alcoholContent; // 알코올 도수
-    private String origin; // 원산지
-    private int volume; // 용량 (ml)
+    private String typeCategory;
+    private double alcoholContent;
+    private String origin;
+    private int volume;
     private int price;
 
-    public Liqueur(int liqueurId, String liqueurName, String type, double alcoholContent, String origin, int volume, int price) {
+    public Liqueur(int liqueurId, String liqueurName, String typeCategory, double alcoholContent, String origin, int volume, int price) {
         this.liqueurId = liqueurId;
         this.liqueurName = liqueurName;
-        this.type = type;
+        this.typeCategory = typeCategory;
         this.alcoholContent = alcoholContent;
         this.origin = origin;
         this.volume = volume;
@@ -23,12 +23,16 @@ public class Liqueur {
         return liqueurId;
     }
 
+    public void setLiqueurId(int liqueurId) {
+        this.liqueurId = liqueurId;
+    }
+
     public String getLiqueurName() {
         return liqueurName;
     }
 
-    public String getType() {
-        return type;
+    public String getTypeCategory() {
+        return typeCategory;
     }
 
     public double getAlcoholContent() {
@@ -49,6 +53,6 @@ public class Liqueur {
 
     @Override
     public String toString() {
-        return liqueurId + ", " + liqueurName + ", " + type + ", " + alcoholContent + "%, " + origin + ", " + volume + "ml, " + price + "원";
+        return liqueurId + ", " + liqueurName + " (" + typeCategory + "), " + alcoholContent + "%, " + origin + ", " + volume + "ml, " + price + "원";
     }
 }

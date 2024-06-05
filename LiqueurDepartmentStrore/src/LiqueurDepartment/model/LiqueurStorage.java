@@ -1,8 +1,9 @@
 package LiqueurDepartment.model;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ public class LiqueurStorage {
     ArrayList<Liqueur> liqueurList = new ArrayList<>();
     final int MAX_QUANTITY = 10;
     private String liqueurFilename = "liqueurlist.txt";
+    private int nextLiqueurId = 1;
 
     public LiqueurStorage() throws IOException {
         loadLiqueurListFromFile();        
@@ -24,14 +26,45 @@ public class LiqueurStorage {
             while ((idStr = br.readLine()) != null) {
                 int id = Integer.parseInt(idStr);
                 String name = br.readLine();
-                String type = br.readLine();
+                String typeCategory = br.readLine();
                 double alcoholContent = Double.parseDouble(br.readLine());
                 String origin = br.readLine();
                 int volume = Integer.parseInt(br.readLine());
                 int price = Integer.parseInt(br.readLine());
-                liqueurList.add(new Liqueur(id, name, type, alcoholContent, origin, volume, price));
+                liqueurList.add(new Liqueur(id, name, typeCategory, alcoholContent, origin, volume, price));
+                if (id >= nextLiqueurId) {
+                    nextLiqueurId = id + 1;
+                }
             }
-        } catch (FileNotFoundException | NumberFormatException e) {
+            br.close();
+        } catch (IOException | NumberFormatException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void saveLiqueurListToFile() throws IOException {
+        FileWriter fw;
+        try {
+            fw = new FileWriter(liqueurFilename);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (Liqueur liqueur : liqueurList) {
+                bw.write(String.valueOf(liqueur.getLiqueurId()));
+                bw.newLine();
+                bw.write(liqueur.getLiqueurName());
+                bw.newLine();
+                bw.write(liqueur.getTypeCategory());
+                bw.newLine();
+                bw.write(String.valueOf(liqueur.getAlcoholContent()));
+                bw.newLine();
+                bw.write(liqueur.getOrigin());
+                bw.newLine();
+                bw.write(String.valueOf(liqueur.getVolume()));
+                bw.newLine();
+                bw.write(String.valueOf(liqueur.getPrice()));
+                bw.newLine();
+            }
+            bw.close();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -61,5 +94,65 @@ public class LiqueurStorage {
 
     public int getMaxQuantity() {
         return MAX_QUANTITY;
+    }
+
+    public ArrayList<Liqueur> searchLiqueurByNameOrType(String keyword) {
+        ArrayList<Liqueur> results = new ArrayList<>();
+        for (Liqueur liqueur : liqueurList) {
+            if (liqueur.getLiqueurName().toLowerCase().contains(keyword.toLowerCase()) ||
+                liqueur.getTypeCategory().split(" - ")[0].toLowerCase().contains(keyword.toLowerCase())) {
+                results.add(liqueur);
+            }
+        }
+        return results;
+    }
+
+    public ArrayList<Liqueur> searchLiqueurByCategory(String category) {
+        ArrayList<Liqueur> results = new ArrayList<>();
+        for (Liqueur liqueur : liqueurList) {
+            if (liqueur.getTypeCategory().equalsIgnoreCase(category)) {
+                results.add(liqueur);
+            }
+        }
+        return results;
+    }
+
+    public void addLiqueur(Liqueur liqueur) {
+        liqueur.setLiqueurId(nextLiqueurId++);
+        liqueurList.add(liqueur);
+        try {
+            saveLiqueurListToFile();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public boolean deleteLiqueur(int liqueurId) {
+        Liqueur liqueur = getLiqueurById(liqueurId);
+        if (liqueur != null) {
+            liqueurList.remove(liqueur);
+            try {
+                saveLiqueurListToFile();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateLiqueur(int liqueurId, Liqueur updatedLiqueur) {
+        Liqueur liqueur = getLiqueurById(liqueurId);
+        if (liqueur != null) {
+            updatedLiqueur.setLiqueurId(liqueurId); // 유지 기존 ID를
+            liqueurList.set(liqueurList.indexOf(liqueur), updatedLiqueur);
+            try {
+                saveLiqueurListToFile();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+            return true;
+        }
+        return false;
     }
 }

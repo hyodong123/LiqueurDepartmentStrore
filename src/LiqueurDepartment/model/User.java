@@ -9,10 +9,6 @@ public class User {
         this.phone = phone;
     }
 
-    // 기본 생성자
-    public User() {
-    }
-
     public String getName() {
         return name;
     }

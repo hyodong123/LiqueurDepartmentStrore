@@ -15,11 +15,11 @@ public class LiqueurStorage {
     private String liqueurFilename = "liqueurlist.txt";
     private int nextLiqueurId = 1;
 
-    public LiqueurStorage() throws IOException {
+    public LiqueurStorage(){
         loadLiqueurListFromFile();        
     }
 
-    private void loadLiqueurListFromFile() throws IOException {
+    private void loadLiqueurListFromFile(){
         FileReader fr;
         try {
             fr = new FileReader(liqueurFilename);

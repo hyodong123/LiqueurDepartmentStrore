@@ -184,11 +184,6 @@ public class LiqueurDepartmentController {
         getDeliveryInfo();
         viewOrderInfo();
         if (view.askConfirm("진짜 주문하려면 yes를 입력하세요 : ", "yes")) {
-            if (mCart.getItems().isEmpty()) {
-                view.showMessage("장바구니가 없습니다.");
-                return;
-            }
-
             int orderId = OrderNumberManager.getNextOrderNumber();  // 주문 ID를 가져옵니다.
 
             StringBuilder orderDetails = new StringBuilder();

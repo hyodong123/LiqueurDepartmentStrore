@@ -70,13 +70,4 @@ public class Cart {
 	public void resetCart() {
 		items.clear(); // 모든 항목을 제거하여 장바구니를 비웁니다.
 	}
-
-	public boolean isValidLiqueur(int liqueurId) {
-		for (CartItem item : items) {
-			if (item.getLiqueur().getId() == liqueurId) {
-				return true;
-			}
-		}
-		return false;
-	}
 }
